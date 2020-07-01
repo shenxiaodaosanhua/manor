@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 Route::namespace('V1')->group(function () {
 //    获取用户信息
     Route::post('user', 'UsersController@userInfo');
+    Route::post('auth/login', 'UsersController@login');
     //    获取用户信息
     Route::post('hb-user', 'UsersController@hbUserInfo');
 

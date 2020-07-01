@@ -15,6 +15,15 @@ use Illuminate\Support\Str;
  */
 trait ErpRequestTrait
 {
+
+    /**
+     * @var string[]
+     */
+    protected $config = [
+        'app_id' => '',
+        'app_key' => '',
+    ];
+
     /**
      * @param string $uri
      * @param array $data
@@ -100,8 +109,8 @@ trait ErpRequestTrait
 
         $headerOrigin = [
             'H-REQUEST-TIME' => $time,
-            'H-APPKEY' => config('erp.app_key'),
-            'H-APPID' => config('erp.app_id'),
+            'H-APPKEY' => $this->config['app_key'],
+            'H-APPID' => $this->config['app_id'],
             'H-VERSION' => '1.0.0',
             'H-SIGN' => $data['sign'],
         ];
@@ -111,5 +120,46 @@ trait ErpRequestTrait
             'data' => $data,
             'header' => $headers,
         ];
+    }
+
+    /**
+     * 频道选择
+     * @param string $channel
+     * @return ErpRequestTrait|void
+     */
+    public function channel(string $channel)
+    {
+        switch ($channel) {
+            case 'manor':
+                return $this->handleManorConfig();
+            break;
+            case 'bag' :
+                return $this->handleBagConfig();
+            break;
+            default:
+                throw new HttpException(404, '初始化失败');
+        }
+    }
+
+    /**
+     * 初始化庄园配置
+     * @return $this
+     */
+    protected function handleManorConfig()
+    {
+        $this->config['app_id'] = config('erp.app_id');
+        $this->config['app_key'] = config('erp.app_key');
+        return $this;
+    }
+
+    /**
+     * 初始化红包配置
+     * @return $this
+     */
+    protected function handleBagConfig()
+    {
+        $this->config['app_id'] = config('erp.hb_app_id');
+        $this->config['app_key'] = config('erp.app_key');
+        return $this;
     }
 }

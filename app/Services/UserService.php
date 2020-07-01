@@ -103,6 +103,15 @@ class UserService
         return $user;
     }
 
+    public function login(string $authCode, string $channel = 'manor')
+    {
+        if (empty($authCode)) {
+            throw new HttpException(403, '参数缺失');
+        }
+
+
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */

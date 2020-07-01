@@ -48,6 +48,19 @@ class UsersController extends ApiController
         }
     }
 
+    public function login(UserRequest $request, UserService $userService)
+    {
+        $authCode = $request->get('auth_code');
+        $authCode = rawurldecode($authCode);
+
+        if (strpos($authCode, ' ')) {
+            $authCode = str_replace(' ', '+', $authCode);
+        }
+
+        $user = $userService->userInfo($authCode);
+        return $this->item($user, UserResource::class);
+    }
+
     /**
      * 获取用户信息
      *
